@@ -25,13 +25,13 @@ defmodule MembraneMP3Demo.Pipeline do
       # Convert Raw :s24le to Raw :s16le
       converter: %Membrane.Element.FFmpeg.SWResample.Converter{
         source_caps: %Membrane.Caps.Audio.Raw{
-          format: :s16le,
-          sample_rate: 48000,
-          channels: 2
+          format: :s32le, sample_rate: 44_100, channels: 2
         }
       },
       # Stream data into PortAudio to play it on speakers.
-      sink: Membrane.Element.PortAudio.Sink,
+      # sink: Membrane.Element.PortAudio.Sink,
+      sink: %Membrane.Element.File.Sink{location: "result.mp3"},
+      encoder: Membrane.Element.Lame.Encoder
     ]
 
     # Map that describes how we want data to flow
@@ -41,7 +41,8 @@ defmodule MembraneMP3Demo.Pipeline do
     links = %{
       {:file_src, :source} => {:decoder, :sink},
       {:decoder, :source} => {:converter, :sink},
-      {:converter, :source} => {:sink, :sink},
+      {:converter, :source} => {:encoder, :sink},
+      {:encoder, :source} => {:sink, :sink},
     }
 
     spec = %Membrane.Pipeline.Spec{

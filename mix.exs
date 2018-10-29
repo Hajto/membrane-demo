@@ -26,6 +26,7 @@ defmodule MembraneMP3Demo.MixProject do
       {:membrane_element_portaudio, "~> 0.1"},
       {:membrane_element_ffmpeg_swresample, "~> 0.1"},
       {:membrane_element_mad, "~> 0.1"},
+      {:membrane_element_lame, "~> 0.1"}
     ]
   end
 end
